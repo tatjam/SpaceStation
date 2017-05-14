@@ -1,24 +1,39 @@
 #include <SFML/Graphics.hpp>
 
+#include "server/Server.h"
+#include "client/Client.h"
+
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	NetCommand cmd;
+	cmd.command = "SAY";
+	cmd.args.push_back("Well, that was interesting lol!");
+	std::size_t outsize;
+	sf::Clock measurer;
+	measurer.restart();
+	NetUtil::formMessage(cmd, &outsize);
+	float taken = measurer.restart().asSeconds();
+	printf("Taken: %f\n", taken);
 
+	Server server = Server();
+	Client client = Client();
 
-	while (window.isOpen())
+	NetSender serverNet;
+	serverNet.ip = sf::IpAddress::getLocalAddress();
+	serverNet.port = server.socket->getLocalPort();
+
+	sf::Clock dtc = sf::Clock();
+	float dt = 0.0f;
+
+	while (true)
 	{
-		sf::Event event;
-		while (window.pollEvent(event))
+		if (client.connected == false)
 		{
-			if (event.type == sf::Event::Closed)
-				window.close();
+			client.connect(serverNet);
 		}
+		server.update(dt);
 
-		window.clear();
-		window.draw(shape);
-		window.display();
+		dt = dtc.restart().asSeconds();
 	}
 
 	return 0;

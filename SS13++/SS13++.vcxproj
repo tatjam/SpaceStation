@@ -115,6 +115,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Programming\SFML\SFML-2.4.2-windows-vc14-64-bit\SFML-2.4.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -124,11 +125,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\util\RSocket.cpp" />
+    <ClCompile Include="src\server\Server.cpp" />
+    <ClCompile Include="src\client\Client.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\util\NetUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\util\RSocket.h" />
+    <ClInclude Include="src\server\Server.h" />
+    <ClInclude Include="src\client\Client.h" />
     <ClInclude Include="src\dep\json.h" />
     <ClInclude Include="src\dep\stb_perlin.h" />
+    <ClInclude Include="src\util\NetUtil.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
