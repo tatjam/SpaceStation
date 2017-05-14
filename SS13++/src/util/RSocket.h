@@ -1,7 +1,7 @@
 #pragma once
 #include "NetUtil.h"
 
-#define RSOCKET_INTERVAL 0.2f
+#define RSOCKET_INTERVAL 0.3f
 
 struct RMessage
 {
@@ -18,6 +18,8 @@ struct RMessage
 class RSocket
 {
 public:
+
+	ncid id = 0;
 
 	RMessage received;
 

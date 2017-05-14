@@ -46,6 +46,7 @@ NetCommand NetUtil::breakMessage(char* packet, std::size_t size)
 	{
 		if (packet[i] == ARG_SEPARATOR)
 		{
+			buff += '\0';
 			read.push_back(buff);
 			buff = "";
 			i++;
@@ -58,7 +59,9 @@ NetCommand NetUtil::breakMessage(char* packet, std::size_t size)
 
 		buff += packet[i];
 	}
+
 	read.push_back(buff);
+	buff = "";
 
 	out.command = read[0];
 	for (i = 1; i < read.size() - 1; i++)

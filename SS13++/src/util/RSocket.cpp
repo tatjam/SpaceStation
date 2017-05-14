@@ -10,9 +10,11 @@ void RSocket::send(NetCommand cmd, sf::IpAddress target, unsigned short port)
 	RMessage n = RMessage();
 	n.addr = target;
 	n.port = port;
+	cmd.id = id;
 	n.command = cmd;
-	n.time = 0.0f;
+	n.time = 9999999.0f;
 	sent.push_back(n);
+	id++;
 }
 
 RMessage* RSocket::update(float dt)
@@ -23,10 +25,10 @@ RMessage* RSocket::update(float dt)
 	sf::IpAddress ip;
 	unsigned short port;
 
-	if (socket->receive(receive, PACKET_SIZE, receiveSize, ip, port))
+	if (socket->receive(receive, PACKET_SIZE, receiveSize, ip, port) != sf::Socket::NotReady)
 	{
 		NetCommand cmd = NetUtil::breakMessage(receive, receiveSize);
-		if (cmd.command == "REPLY")
+		if (strcmp(cmd.command.c_str(), "REPLY") == 0 && cmd.args.size() == 1)
 		{
 			for (int i = 0; i < sent.size(); i++)
 			{
@@ -50,6 +52,8 @@ RMessage* RSocket::update(float dt)
 			cmd.command = "REPLY";
 			cmd.args.push_back(std::to_string(cmd.id));
 
+			NetUtil::sendMessage(socket, cmd, ip, port);
+
 			return &received;
 		}
 	}
@@ -71,6 +75,7 @@ RMessage* RSocket::update(float dt)
 RSocket::RSocket()
 {
 	socket = new sf::UdpSocket();
+	socket->setBlocking(false);
 }
 
 

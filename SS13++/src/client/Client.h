@@ -16,14 +16,14 @@ public:
 
 
 	bool connected = false;
-
+	bool connecting = false;
 	std::string name;
 
 	float timer = 0.0f;
 
 	NetSender server;
 
-	sf::UdpSocket* socket;
+	RSocket* socket;
 
 	void update(float dt);
 

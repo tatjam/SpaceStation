@@ -20,7 +20,7 @@ int main()
 
 	NetSender serverNet;
 	serverNet.ip = sf::IpAddress::getLocalAddress();
-	serverNet.port = server.socket->getLocalPort();
+	serverNet.port = server.socket->socket->getLocalPort();
 
 	sf::Clock dtc = sf::Clock();
 	float dt = 0.0f;
@@ -32,6 +32,7 @@ int main()
 			client.connect(serverNet);
 		}
 		server.update(dt);
+		client.update(dt);
 
 		dt = dtc.restart().asSeconds();
 	}

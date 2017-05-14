@@ -2,39 +2,26 @@
 
 void Server::update(float dt)
 {
-	char data[258];
-	std::size_t received;
-
-	sf::IpAddress remoteA;
-	ushort remoteP;
-	if (socket->receive(data, 256, received, remoteA, remoteP) != sf::Socket::NotReady)
+	RMessage* r = socket->update(dt);
+	if(r != NULL)
 	{
-		NetCommand cmd = NetUtil::breakMessage(data, received);
-		printf("Received packet! Content: (%s)\n", data);
-		printf("Command: %s\n", NetUtil::toString(cmd).c_str());
-		printf("Sender IP: (%s) Port: (%i)\n", remoteA.toString().c_str(), remoteP);
-		if (cmd.command == "CONNECT" && cmd.args.size() == 1)
+		//printf("Received: %s\n", NetUtil::toString(r->command).c_str());
+		if(strcmp(r->command.command.c_str(), "CONNECT") == 0)
 		{
-			printf("Connect request received! (%s)\n", cmd.args[0].c_str());
+			printf("Connect request received! (%s)\n", r->command.args[0].c_str());
 			NetCommand reply;
 			reply.command = "CONNECT_REPLY";
-			reply.args.push_back("ACCEPT");
-			reply.id = id;
-			NetUtil::sendMessage(socket, reply, remoteA, remoteP);
-			id++;
+			reply.args.push_back("ACCEPTED");
+			socket->send(reply, r->addr, r->port);
 		}
 	}
+
 }
 
 Server::Server()
 {
-	socket = new sf::UdpSocket();
-	if (socket->bind(1234) != sf::Socket::Done)
-	{
-		printf("Could not create server socket!\n");
-	}
-
-	socket->setBlocking(false);
+	socket = new RSocket();
+	socket->bind(1234);
 }
 
 

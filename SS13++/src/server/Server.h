@@ -25,11 +25,11 @@ private:
 
 public:
 
-	RSocket
+	RSocket* socket;
 
 	std::map<NetSender, sf::Vector2f> players;
 
-	sf::UdpSocket* socket;
+	//sf::UdpSocket* socket;
 
 	void update(float dt);
 
