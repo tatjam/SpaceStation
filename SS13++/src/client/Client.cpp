@@ -2,6 +2,16 @@
 
 void Client::update(float dt)
 {
+	sf::Event e;
+	while (win->pollEvent(e))
+	{
+		// Process event
+		if (e.type == sf::Event::Closed)
+		{
+			win->close();
+		}
+	}
+
 	timer += dt;
 
 	RMessage* msg = socket->update(dt);
@@ -48,8 +58,18 @@ void Client::connect(NetSender server)
 	this->connecting = true;
 }
 
+void Client::display()
+{
+	win->clear();
+
+	win->display();
+}
+
 Client::Client()
 {
+
+	win = new sf::RenderWindow(sf::VideoMode(512, 512), "Hello World");
+
 	cClock = sf::Clock();
 
 	socket = new RSocket();

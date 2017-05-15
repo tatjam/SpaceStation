@@ -3,6 +3,8 @@
 #include "../server/Server.h"
 
 
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 
 class Client
 {
@@ -13,7 +15,7 @@ private:
 
 public:
 
-
+	sf::RenderWindow* win;
 
 	bool connected = false;
 	bool connecting = false;
@@ -28,6 +30,8 @@ public:
 	void update(float dt);
 
 	void connect(NetSender server);
+
+	void display();
 
 	Client();
 	~Client();
