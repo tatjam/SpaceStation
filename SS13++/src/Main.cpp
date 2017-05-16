@@ -7,13 +7,16 @@
 #include "shared/SquirrelScript.h"
 
 #include "shared/AssetManager.h"
-
+#include "shared/Tilemap.h"
 
 int main()
 {
 
 	AssetManager assetManager = AssetManager("res/");
 	assetManager.getTex("test.png");
+
+	Tilemap tilemap = Tilemap(10, 10, &assetManager);
+	tilemap.get(5, 5)->id = "asd";
 
 	Server server = Server();
 	Client client = Client();
@@ -35,7 +38,7 @@ int main()
 		client.update(dt);
 
 		client.win->clear();
-
+		tilemap.render(client.win);
 		client.display();
 
 		dt = dtc.restart().asSeconds();

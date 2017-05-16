@@ -5,13 +5,16 @@
 
 #include "AssetManager.h"
 
+#define TILE_SIZE 32
+
 struct Tile
 {
-	std::string topID = "";
-	std::string botID = "";
+	std::string id = "";
 
 	float topHealth = 0.0f;
 	float botHealth = 0.0f;
+
+	sf::Color light = sf::Color::White;
 
 	// TODO: ENTITY LIST, ETC...
 
@@ -42,14 +45,14 @@ public:
 	// if perfomance is bad
 	void render(sf::RenderWindow* win, 
 		sf::Vector2f offset = sf::Vector2f(0, 0), 
-		sf::Vector2f scale = sf::Vector2f(0, 0), float angle = 0.0f);
+		sf::Vector2f scale = sf::Vector2f(1, 1), float angle = 0.0f);
 
 	void create(int xsize, int ysize);
 
 	void updateServer();
 	void updateClient();
 
-	Tilemap(int xsize, int ysize);
+	Tilemap(int xsize, int ysize, AssetManager* assetManager);
 	~Tilemap();
 };
 
