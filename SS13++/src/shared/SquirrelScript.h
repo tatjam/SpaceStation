@@ -4,11 +4,11 @@
 
 extern "C"
 {
-#include "../include/squirrel.h"
-#include "../include/sqstdio.h"
-#include "../include/sqstdmath.h"
-#include "../include/sqstdstring.h"
-#include "../include/sqstdaux.h"
+#include "../dep/squirrel/include/squirrel.h"
+#include "../dep/squirrel/include/sqstdio.h"
+#include "../dep/squirrel/include/sqstdmath.h"
+#include "../dep/squirrel/include/sqstdstring.h"
+#include "../dep/squirrel/include/sqstdaux.h"
 }
 
 #ifdef SQUNICODE
@@ -27,16 +27,23 @@ extern "C"
 
 // TODO: EXTEND THIS PLEASE! 
 
-
-
+#define sqNoArgument sqArgument();
 
 struct sqArgument
 {
-	SQObjectType type;
+	bool empty = true;
+	SQObjectType type = OT_NULL;
 	
 	int iVal;
 	float fVal;
 	std::string sVal;
+
+	sqArgument() { empty = true; }
+	sqArgument(SQObjectType type) { this->type = type; empty = false; }
+	sqArgument(SQObjectType type, int iVal, float fVal, std::string sVal)
+	{
+		this->type = type; this->iVal = iVal; this->fVal = fVal, this->sVal = sVal; empty = false;
+	};
 };
 
 
@@ -49,19 +56,8 @@ public:
 
 };
 
-typedef sqArgument(*sqFunction)(sqArgList);
+typedef SQInteger(*sqFunction)(HSQUIRRELVM);
 
-
-class sqUtil
-{
-public:
-	
-	static float getFloat(sqArgument arg);
-	static int getInt(sqArgument arg);
-	static std::string getString(sqArgument arg);
-	static bool getBool(sqArgument arg);
-
-};
 
 SQInteger sqReadFileChar(SQUserPointer file);
 
@@ -72,6 +68,8 @@ void printfunc(HSQUIRRELVM v, const SQChar *s, ...);
 void errorfunc(HSQUIRRELVM v, const SQChar *s, ...);
 
 
+// This is messy, but the system is not gonna be
+// threaded so this CAN be done. Could be changed!
 
 class sqScript
 {
@@ -81,7 +79,7 @@ public:
 	HSQUIRRELVM vm;
 
 	// Registers a function
-	void createFunction(sqFunction fun);
+	void regFunction(sqFunction fun, std::string fname);
 
 	// Calls function by name, feed arguments
 	sqArgument call(std::string name, sqArgList args);

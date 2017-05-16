@@ -1,35 +1,82 @@
 #include <SFML/Graphics.hpp>
 
-#include <stdarg.h>
 #include "server/Server.h"
 #include "client/Client.h"
 
-extern "C"
+
+#include "shared/SquirrelScript.h"
+
+SQInteger testfun(HSQUIRRELVM vm)
 {
+	printf("We got called from the VM!\n");
+	SQInteger argCount = sq_gettop(vm);
+	for (int i = 2; i <= argCount; i++)
+	{
+		printf("Arg (%i): Type: ", i);
+		switch (sq_gettype(vm, i))
+		{
+		case OT_NULL:
+			printf("null");
+			break;
+		case OT_INTEGER:
+			printf("integer");
+			break;
+		case OT_FLOAT:
+			printf("float");
+			break;
+		case OT_STRING:
+			printf("string");
+			break;
+		case OT_TABLE:
+			printf("table");
+			break;
+		case OT_ARRAY:
+			printf("array");
+			break;
+		case OT_USERDATA:
+			printf("userdata");
+			break;
+		case OT_CLOSURE:
+			printf("closure(function)");
+			break;
+		case OT_NATIVECLOSURE:
+			printf("native closure(C function)");
+			break;
+		case OT_GENERATOR:
+			printf("generator");
+			break;
+		case OT_USERPOINTER:
+			printf("userpointer");
+			break;
+		case OT_CLASS:
+			printf("class");
+			break;
+		case OT_INSTANCE:
+			printf("instance");
+			break;
+		case OT_WEAKREF:
+			printf("weak reference");
+			break;
+		default:
+			return sq_throwerror(vm, "invalid param"); //throws an exception
+		}
+		printf("\n");
+	}
 
-#include "dep/squirrel/include/squirrel.h"
-#include "dep/squirrel/include/sqstdio.h"
-#include "dep/squirrel/include/sqstdmath.h"
-#include "dep/squirrel/include/sqstdstring.h"
-#include "dep/squirrel/include/sqstdaux.h"
+	argCount -= 1;
+
+	sq_pushinteger(vm, argCount);
+	return 1;
 }
-
-
-#ifdef SQUNICODE
-
-#define scvprintf vfwprintf
-#else
-
-#define scvprintf vfprintf
-#endif
-
-#include "dep/squirrel/wrap/SquirrelScript.h"
 
 int main()
 {
 
 	sqScript script = sqScript();
+	script.regFunction(testfun, "testfun");
 	script.load("res/test.nut");
+
+
 	sqArgument a, b, c;
 	a.type = OT_INTEGER; a.iVal = 100;
 	b.type = OT_FLOAT; b.fVal = 2.7f;

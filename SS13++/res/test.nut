@@ -3,6 +3,8 @@ print("Outside of all functions!\n");
 function foo(i, f, s)
 {
     print("Function call with arguments, i="+i+", f="+f+", s='"+s+"'\n");
+    local n = testfun(1, 2, 3);
+    print("N: " + n + "\n");
     print("Now i will fizzbuzz with i\n");
 
     for(local si = 0; si < i; si++)

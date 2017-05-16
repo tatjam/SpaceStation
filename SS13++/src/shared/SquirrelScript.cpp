@@ -36,6 +36,15 @@ void sqCompileError(HSQUIRRELVM v, const SQChar* desc, const SQChar* source, SQI
 }
 
 
+void sqScript::regFunction(sqFunction fun, std::string fname)
+{
+	sq_pushroottable(vm);
+	sq_pushstring(vm, fname.c_str(), -1);
+	sq_newclosure(vm, fun, 0);
+	sq_newslot(vm, -3, SQFalse);
+	sq_pop(vm, 1);
+}
+
 sqArgument sqScript::call(std::string name, sqArgList args)
 {
 	SQInteger top = sq_gettop(vm);

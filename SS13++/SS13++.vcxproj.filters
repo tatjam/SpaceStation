@@ -93,7 +93,7 @@
     <ClCompile Include="src\dep\squirrel\include\sqvm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\dep\squirrel\wrap\SquirrelScript.cpp">
+    <ClCompile Include="src\shared\SquirrelScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -254,7 +254,7 @@
     <ClInclude Include="src\dep\squirrel\include\sqvm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\dep\squirrel\wrap\SquirrelScript.h">
+    <ClInclude Include="src\shared\SquirrelScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

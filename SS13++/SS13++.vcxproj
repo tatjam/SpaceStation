@@ -131,7 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\dep\squirrel\wrap\SquirrelScript.cpp" />
+    <ClCompile Include="src\shared\SquirrelScript.cpp" />
     <ClCompile Include="src\dep\squirrel\include\sqapi.cpp" />
     <ClCompile Include="src\dep\squirrel\include\sqbaselib.cpp" />
     <ClCompile Include="src\dep\squirrel\include\sqclass.cpp" />
@@ -160,7 +160,7 @@
     <ClCompile Include="src\shared\Tilemap.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\dep\squirrel\wrap\SquirrelScript.h" />
+    <ClInclude Include="src\shared\SquirrelScript.h" />
     <ClInclude Include="src\dep\angelscript\angelscript.h" />
     <ClInclude Include="src\dep\squirrel\include\sqarray.h" />
     <ClInclude Include="src\dep\squirrel\include\sqclass.h" />
