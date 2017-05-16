@@ -96,7 +96,7 @@
     <ClCompile Include="src\shared\SquirrelScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\server\FlowSimulation.cpp">
+    <ClCompile Include="src\server\flowold\FlowSimulationOld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -260,7 +260,7 @@
     <ClInclude Include="src\shared\SquirrelScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\server\FlowSimulation.h">
+    <ClInclude Include="src\server\flowold\FlowSimulationOld.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

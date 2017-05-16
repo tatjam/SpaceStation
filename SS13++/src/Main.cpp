@@ -12,32 +12,33 @@
 int main()
 {
 	FlowSimulation flow;
-	flow.create(15, 15);
-	flow.map[5 * flow.width + 5] = 9.0f;
+	flow.create(125, 125);
+	flow.map[1 * flow.width + 1] = 100000;
+	//flow.map[12 * flow.width + 5] = 1;
 
 	for (int i = 0; i < 15; i++)
 	{
-		flow.map[i * flow.width + 8] = -2.0f;
-		flow.map[i * flow.width + 2] = -2.0f;
-		flow.map[2 * flow.width + i] = -2.0f;
-		flow.map[8 * flow.width + i] = -2.0f;
-		flow.map[13 * flow.width + i] = -2.0f;
+		flow.map[i * flow.width + 8] = -2;
+		flow.map[i * flow.width + 2] = -2;
+		/*flow.map[2 * flow.width + i] = -2;
+		flow.map[8 * flow.width + i] = -2;
+		flow.map[13 * flow.width + i] = -2;*/
 	}
 
 	flow.map[8 * flow.width + 7] = 0.0f;
 
 	//flow.map[8 * flow.width + 8] = 9.0f;
 
-	while (true)
+	/*while (true)
 	{
 
-		flow.draw();
+		flow.termDraw();
 		flow.iterate();
 
 		printf("\n\n\n\n\n\n");
 
 		getchar();
-	}
+	}*/
 
 	Server server = Server();
 	Client client = Client();
@@ -49,7 +50,7 @@ int main()
 	sf::Clock dtc = sf::Clock();
 	float dt = 0.0f;
 
-	while (true)
+	while (client.win->isOpen())
 	{
 		if (client.connected == false)
 		{
@@ -58,9 +59,16 @@ int main()
 		server.update(dt);
 		client.update(dt);
 
+		client.win->clear();
+
+
+		flow.iterate();
+		flow.draw(client.win, 100.0f);
 		client.display();
 
 		dt = dtc.restart().asSeconds();
+		printf("FPS: %f\n", 1 / dt);
+
 	}
 
 	return 0;

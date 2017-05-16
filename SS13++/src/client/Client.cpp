@@ -58,10 +58,9 @@ void Client::connect(NetSender server)
 	this->connecting = true;
 }
 
+
 void Client::display()
 {
-	win->clear();
-
 	win->display();
 }
 

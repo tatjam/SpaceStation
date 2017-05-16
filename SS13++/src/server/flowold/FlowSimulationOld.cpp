@@ -8,25 +8,71 @@ void FlowSimulation::create(int w, int h)
 	map = std::vector<double>(w * h, 0.0f);
 }
 
-void FlowSimulation::draw()
+void FlowSimulation::draw(sf::RenderWindow* win, float max, sf::Vector2f offset,
+	sf::Vector2f tileSize, sf::Color color, sf::Color wallColor)
+{
+
+	sf::RectangleShape rect;
+	rect.setSize(tileSize);
+
+
+	for (int x = 0; x < width; x++)
+	{
+		for (int y = 0; y < height; y++)
+		{
+
+
+			float rx = x * tileSize.x + offset.x;
+			float ry = y * tileSize.y + offset.y;
+
+			if (map[y * width + x] < -0.4)
+			{
+				// Wall
+				rect.setFillColor(wallColor);
+
+				rect.setPosition(sf::Vector2f(rx, ry));
+
+				win->draw(rect);
+
+				continue;
+			}
+
+			float intensity = map[y * width + x] / max; 
+			if (intensity > 1.0f)
+			{
+				intensity = 1.0f;
+			}
+
+			rect.setFillColor(sf::Color(
+				(float)color.r * intensity, (float)color.g * intensity, (float)color.b * intensity));
+
+			rect.setPosition(sf::Vector2f(rx, ry));
+
+
+			win->draw(rect);
+		}
+	}
+}
+
+void FlowSimulation::termDraw()
 {
 	for (int y = 0; y < height; y++)
 	{
 		for (int x = 0; x < width; x++)
 		{
-			if (map[y * width + x] >= 1.0f)
+			if (map[y * width + x] >= 0.95)
 			{
-				printf("%i ", (int)(map[y * width + x]));
+				printf("%i ", (int)std::round(map[y * width + x]));
 			}
-			else if (map[y * width + x] >= 0.1f)
+			else if (map[y * width + x] > 0.1)
 			{
 				printf("; ");
 			}
-			else if (map[y * width + x] >= 0.001f)
+			else if (map[y * width + x] >= 0.001)
 			{
 				printf(". ");
 			}
-			else if(map[y * width + x] > -0.5f)
+			else if(map[y * width + x] > -0.5)
 			{
 				printf("  ");
 			}
@@ -40,7 +86,13 @@ void FlowSimulation::draw()
 	}
 }
 
-void FlowSimulation::iterate()
+void FlowSimulation::iterateFast()
+{
+	// Flood fill system
+
+}
+
+void FlowSimulation::iterateCell()
 {
 	double totalEnergyStart = 0.0f;
 	for (int x = 0; x < width; x++)
@@ -79,7 +131,7 @@ void FlowSimulation::iterate()
 						wallTiles++;
 						continue;
 					}
-					if (map[(y + oy) * width + (x + ox)] < -0.5f)
+					if (hold[(y + oy) * width + (x + ox)] < -0.5f)
 					{
 						wallTiles++;
 						continue;
@@ -88,9 +140,7 @@ void FlowSimulation::iterate()
 			}
 
 			// Simply distribute us in surrounding non-wall tiles
-			double give = hold[y * width + x] / (9 - wallTiles);
-			give += give * 0.095f;
-			
+			double give = hold[y * width + x] / (double)(9 - wallTiles);
 
 			for (int ox = -1; ox <= 1; ox++)
 			{
@@ -101,7 +151,7 @@ void FlowSimulation::iterate()
 					{
 						continue;
 					}
-					if (map[(y + oy) * width + (x + ox)] < -0.5f)
+					if (hold[(y + oy) * width + (x + ox)] < -0.5f)
 					{
 						continue;
 					}
@@ -123,7 +173,7 @@ void FlowSimulation::iterate()
 		}
 	}
 
-	printf("Start: %f, End: %f, Delta: %f\n", totalEnergyStart, totalEnergyEnd, -(totalEnergyStart - totalEnergyEnd));
+	//printf("Start: %f, End: %f, Delta: %f\n", totalEnergyStart, totalEnergyEnd, -(totalEnergyStart - totalEnergyEnd));
 
 	prevDelta = -(totalEnergyStart - totalEnergyEnd);
 }
