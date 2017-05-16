@@ -5,40 +5,15 @@
 
 
 #include "shared/SquirrelScript.h"
-#include "server/FlowSimulation.h"
 
+#include "shared/AssetManager.h"
 
 
 int main()
 {
-	FlowSimulation flow;
-	flow.create(125, 125);
-	flow.map[1 * flow.width + 1] = 100000;
-	//flow.map[12 * flow.width + 5] = 1;
 
-	for (int i = 0; i < 15; i++)
-	{
-		flow.map[i * flow.width + 8] = -2;
-		flow.map[i * flow.width + 2] = -2;
-		/*flow.map[2 * flow.width + i] = -2;
-		flow.map[8 * flow.width + i] = -2;
-		flow.map[13 * flow.width + i] = -2;*/
-	}
-
-	flow.map[8 * flow.width + 7] = 0.0f;
-
-	//flow.map[8 * flow.width + 8] = 9.0f;
-
-	/*while (true)
-	{
-
-		flow.termDraw();
-		flow.iterate();
-
-		printf("\n\n\n\n\n\n");
-
-		getchar();
-	}*/
+	AssetManager assetManager = AssetManager("res/");
+	assetManager.getTex("test.png");
 
 	Server server = Server();
 	Client client = Client();
@@ -61,13 +36,10 @@ int main()
 
 		client.win->clear();
 
-
-		flow.iterate();
-		flow.draw(client.win, 100.0f);
 		client.display();
 
 		dt = dtc.restart().asSeconds();
-		printf("FPS: %f\n", 1 / dt);
+		//rintf("FPS: %f\n", 1 / dt);
 
 	}
 

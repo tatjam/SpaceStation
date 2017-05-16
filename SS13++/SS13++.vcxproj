@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\shared\AssetManager.cpp" />
     <ClCompile Include="src\server\flowold\FlowSimulationOld.cpp" />
     <ClCompile Include="src\shared\SquirrelScript.cpp" />
     <ClCompile Include="src\dep\squirrel\include\sqapi.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="src\shared\Tilemap.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\shared\AssetManager.h" />
     <ClInclude Include="src\server\flowold\FlowSimulationOld.h" />
     <ClInclude Include="src\shared\SquirrelScript.h" />
     <ClInclude Include="src\dep\angelscript\angelscript.h" />

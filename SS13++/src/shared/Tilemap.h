@@ -2,32 +2,47 @@
 
 #include <SFML/Graphics.hpp>
 
+
+#include "AssetManager.h"
+
 struct Tile
 {
-	sf::Color light = sf::Color::Black;
-	float health = 100.0f;
-	std::string id = "air";
+	std::string topID = "";
+	std::string botID = "";
 
-	Tile()
-	{
-		light = sf::Color::Black;
-		health = 100.0f;
-		id = "air";
-	}
+	float topHealth = 0.0f;
+	float botHealth = 0.0f;
+
+	// TODO: ENTITY LIST, ETC...
+
 };
 
 class Tilemap
 {
+
+private:
+
+	sf::Sprite sInstance;
+
 public:
+
+	AssetManager* assets;
 
 	std::vector<Tile> tiles;
 
-	int width;
+	int width, height;
 
 	Tile* get(int x, int y);
 	inline int getIndex(int x, int y);
 
-	void render(sf::RenderWindow* win, sf::Vector2f offset);
+	
+	// We use an instanced sf::Sprite, could be improved
+	// or even look into shader tilemaps
+	// We don't yet use a texture atlas, it may become required
+	// if perfomance is bad
+	void render(sf::RenderWindow* win, 
+		sf::Vector2f offset = sf::Vector2f(0, 0), 
+		sf::Vector2f scale = sf::Vector2f(0, 0), float angle = 0.0f);
 
 	void create(int xsize, int ysize);
 

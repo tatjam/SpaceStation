@@ -10,12 +10,18 @@ class FlowSimulationOld
 {
 public:
 
+	sf::Image img;
+	sf::Texture tex;
+
+
+	sf::Uint8* pixels;
+
 	int width, height;
 
-	std::vector<double> map;
+	std::vector<float> map;
 
-	double prevDelta = 0.0f;
-
+	float prevDelta = 0.0f;
+	
 	void iterateCell();
 
 	void iterateFast();
