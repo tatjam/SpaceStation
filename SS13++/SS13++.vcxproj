@@ -219,7 +219,13 @@
     <ClInclude Include="src\shared\Tilemap.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\data\tiles.json" />
     <None Include="res\test.nut" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\scaffold\hor.png" />
+    <Image Include="res\test.png" />
+    <Image Include="res\test2.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

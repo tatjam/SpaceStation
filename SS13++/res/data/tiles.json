@@ -1,0 +1,25 @@
+{
+
+  "base_damage": "damage.png",
+  "base_dirt": "dirt.png",
+
+  "floor": {
+    "top": "test.png",
+    "bot": "test2.png",
+    "walkable": true,
+    "tophealth": 100.0,
+    "bothealth": 100.0,
+    "transparent": false
+  },
+
+  "tubes": {
+    "top": "test2.png",
+    "bot": "test.png",
+    "walkable": true,
+    "tophealth": 100.0,
+    "bothealth": 100.0,
+    "transparent": true
+  }
+
+
+}

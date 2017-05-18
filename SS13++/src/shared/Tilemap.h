@@ -7,11 +7,25 @@
 
 #define TILE_SIZE 32
 
+
+//          TILES
+// 
+// Tiles are very basic blocks.
+// They have no interaction and just build up a physical
+// station. They have a top and bottom layer
+
+
 struct Tile
 {
 	std::string id = "";
 
+	// Top health is what blocks the 
+	// player from moving through
+	// Leaks only if next to empty tiles
 	float topHealth = 0.0f;
+
+	// Bot health is the "ground" of the 
+	// tile, if it breaks there is a leak
 	float botHealth = 0.0f;
 
 	sf::Color light = sf::Color::White;
@@ -45,11 +59,16 @@ public:
 	// if perfomance is bad
 	void render(sf::RenderWindow* win, 
 		sf::Vector2f offset = sf::Vector2f(0, 0), 
-		sf::Vector2f scale = sf::Vector2f(1, 1), float angle = 0.0f);
+		sf::Vector2f scale = sf::Vector2f(1, 1));
 
 	void create(int xsize, int ysize);
 
+	void resize(int nsizex, int nsizey);
+
+	// We must check for any MDATA commands
 	void updateServer();
+
+	// We download required info from server
 	void updateClient();
 
 	Tilemap(int xsize, int ysize, AssetManager* assetManager);

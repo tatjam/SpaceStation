@@ -272,5 +272,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\test.nut" />
+    <None Include="res\data\tiles.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\test2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\test.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\scaffold\hor.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
