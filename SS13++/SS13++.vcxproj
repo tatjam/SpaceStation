@@ -131,6 +131,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\dep\imgui\imgui-SFML.cpp" />
+    <ClCompile Include="src\dep\imgui\imgui.cpp" />
+    <ClCompile Include="src\dep\imgui\imgui_demo.cpp" />
+    <ClCompile Include="src\dep\imgui\imgui_draw.cpp" />
+    <ClCompile Include="src\editor\Editor.cpp" />
     <ClCompile Include="src\shared\AssetManager.cpp" />
     <ClCompile Include="src\server\flowold\FlowSimulationOld.cpp" />
     <ClCompile Include="src\shared\SquirrelScript.cpp" />
@@ -162,6 +167,16 @@
     <ClCompile Include="src\shared\Tilemap.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\dep\imgui\imconfig.h" />
+    <ClInclude Include="src\dep\imgui\imgui-SFML.h" />
+    <ClInclude Include="src\dep\imgui\imgui.h" />
+    <ClInclude Include="src\dep\imgui\imgui_internal.h" />
+    <ClInclude Include="src\dep\imgui\stb_rect_pack.h" />
+    <ClInclude Include="src\dep\imgui\stb_textedit.h" />
+    <ClInclude Include="src\dep\imgui\stb_truetype.h" />
+    <ClInclude Include="src\editor\Editor.h" />
+    <ClInclude Include="src\shared\ECS\DynamicEntity.h" />
+    <ClInclude Include="src\shared\Entity.h" />
     <ClInclude Include="src\shared\AssetManager.h" />
     <ClInclude Include="src\server\flowold\FlowSimulationOld.h" />
     <ClInclude Include="src\shared\SquirrelScript.h" />

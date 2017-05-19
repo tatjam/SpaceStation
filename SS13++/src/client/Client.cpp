@@ -5,12 +5,20 @@ void Client::update(float dt)
 	sf::Event e;
 	while (win->pollEvent(e))
 	{
+		ImGui::SFML::ProcessEvent(e);
 		// Process event
 		if (e.type == sf::Event::Closed)
 		{
 			win->close();
 		}
 	}
+
+	ImGui::SFML::Update(*win, sf::seconds(dt));
+
+	ImGui::Begin("TEST");
+	ImGui::Button("!!!");
+	ImGui::End();
+
 
 	timer += dt;
 
@@ -61,6 +69,7 @@ void Client::connect(NetSender server)
 
 void Client::display()
 {
+
 	win->display();
 }
 
@@ -68,6 +77,8 @@ Client::Client()
 {
 
 	win = new sf::RenderWindow(sf::VideoMode(512, 512), "Hello World");
+
+	win->resetGLStates();
 
 	cClock = sf::Clock();
 

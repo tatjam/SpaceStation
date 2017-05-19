@@ -9,6 +9,8 @@
 #include "shared/AssetManager.h"
 #include "shared/Tilemap.h"
 
+#include "editor/Editor.h"
+
 int main()
 {
 
@@ -39,20 +41,44 @@ int main()
 
 	float timer = 0.0f;
 
+	float t = 0.0f;
+
+	sf::Vector2f off = sf::Vector2f(0.0f, -128.0f);
+
+	sf::Time dtt;
+
+	ImGui::SFML::Init(*client.win);
+
+	Editor editor = Editor(&tilemap);
+
+	
 	while (client.win->isOpen())
 	{
+		off.x = sin(t) * 90.0f;
+
 		if (client.connected == false)
 		{
 			client.connect(serverNet);
 		}
+
+
+
+
+
+
 		server.update(dt);
 		client.update(dt);
 
+
 		client.win->clear();
-		tilemap.render(client.win, sf::Vector2f(-5.0f, -128.0f), sf::Vector2f(2, 2));
+		tilemap.render(client.win, off, sf::Vector2f(2, 2));
+		client.win->pushGLStates();
+		ImGui::Render();
+		client.win->popGLStates();
 		client.display();
 
-		dt = dtc.restart().asSeconds();
+		dtt = dtc.restart();
+		dt = dtt.asSeconds();
 
 		timer += dt;
 
@@ -62,9 +88,13 @@ int main()
 			timer = 0.0f;
 		}
 
+		t += dt;
+
 		//rintf("FPS: %f\n", 1 / dt);
 
 	}
+	
+	ImGui::SFML::Shutdown();
 
 	return 0;
 }

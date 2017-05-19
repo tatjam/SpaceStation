@@ -3,6 +3,9 @@
 #include "../server/Server.h"
 
 
+#include "../dep/imgui/imgui.h"
+#include "../dep/imgui/imgui-SFML.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 

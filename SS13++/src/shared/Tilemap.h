@@ -5,6 +5,8 @@
 
 #include "AssetManager.h"
 
+#include "ECS/DynamicEntity.h"
+
 #define TILE_SIZE 32
 
 
@@ -29,8 +31,11 @@ struct Tile
 	float botHealth = 0.0f;
 
 	sf::Color light = sf::Color::White;
-
-	// TODO: ENTITY LIST, ETC...
+	
+	// Entities on top of this tile!
+	// When an entity moves it's his responsability
+	// to get put in the correct tile!
+	std::vector<DynamicEntity*> entities;
 
 };
 
@@ -46,6 +51,7 @@ public:
 	AssetManager* assets;
 
 	std::vector<Tile> tiles;
+
 
 	int width, height;
 
