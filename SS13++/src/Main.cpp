@@ -21,7 +21,10 @@ int main()
 
 	Tilemap tilemap = Tilemap(30, 30, &assetManager);
 
-	tilemap.tiles[0].id = "floor";
+	tilemap.tiles[0].bot = assetManager.getTile("floor");
+	tilemap.tiles[0].top = assetManager.getTile("tubes");
+	tilemap.tiles[0].botHealth = 100.0f;
+	tilemap.tiles[0].topHealth = 100.0f;
 
 	sf::RenderWindow* win = new sf::RenderWindow(sf::VideoMode(768, 768), "Editor Window");
 
@@ -69,8 +72,12 @@ int main()
 
 		win->display();
 
+
+
 		dtt = dtc.restart();
 		dt = dtt.asSeconds();
+
+		win->setTitle("FPS: " + std::to_string(1.0f / dt));
 
 	}
 

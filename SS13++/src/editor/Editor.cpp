@@ -1,6 +1,27 @@
 #include "Editor.h"
 
+#define NOC_FILE_DIALOG_IMPLEMENTATION
+#include "../dep/noc_file_dialog.h"
 
+
+
+std::string Editor::getFile(std::string path)
+{
+	std::string buff = "";
+
+	for (int i = path.size(); i > 0; i--)
+	{
+		if (path[i] == '/' || path[i] == '\\')
+		{
+			break;
+		}
+		buff += path[i];
+	}
+
+	std::reverse(buff.begin(), buff.end());
+
+	return buff;
+}
 
 void Editor::resize(sf::Vector2f newSize)
 {
@@ -10,16 +31,30 @@ void Editor::resize(sf::Vector2f newSize)
 	view.zoom(zoom);
 }
 
-void Editor::update(float dt)
+bool Editor::uiTileButton(TileInfo* t, float scale)
 {
+	bool click = ImGui::ImageButton(*t->tex, sf::Vector2f(TILE_SIZE * scale, TILE_SIZE * scale));
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::Text("%s ('%s')    ", t->name.c_str(), t->cname.c_str());
+		ImGui::Separator();
+		ImGui::TextWrapped("%s", t->desc.c_str());
+		ImGui::EndTooltip();
+	}
 
+	return click;
+}
+
+void Editor::doInput(float dt)
+{
 	bool shiftDown = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift);
 	// Camera handling
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
 	{
-		if (shiftDown){zoom += ZOOM_FACTOR * ZOOM_SHIFT * dt;}
-		else{zoom += ZOOM_FACTOR * dt;}
+		if (shiftDown) { zoom += ZOOM_FACTOR * ZOOM_SHIFT * dt; }
+		else { zoom += ZOOM_FACTOR * dt; }
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
@@ -48,15 +83,172 @@ void Editor::update(float dt)
 		if (shiftDown) { focus.x += MOVE_SPEED * ZOOM_SHIFT * dt; }
 		else { focus.x += MOVE_SPEED * dt; }
 	}
-	float scale = 2.0f;
+}
 
+void Editor::save(std::string path)
+{
+	std::ofstream fout(path, std::ofstream::out | std::ofstream::trunc);
+
+	if (fout.bad())
+	{
+		return;
+	}
+
+	fout << map->serialize();
+
+	fout.close();
+}
+
+void Editor::load(std::string path)
+{
+	std::ifstream fin(path);
+
+	if (fin.bad())
+	{
+		return;
+	}
+
+	std::string str((std::istreambuf_iterator<char>(fin)),
+		std::istreambuf_iterator<char>());
+
+	map->deserialize(str);
+
+	fin.close();
+}
+
+void Editor::uiMenuBar()
+{
+	ImGui::BeginMainMenuBar();
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			ImGui::MenuItem("New");
+			if (ImGui::MenuItem("Open", "CTRL+O"))
+			{
+				const char* ff = noc_file_dialog_open(NOC_FILE_DIALOG_OPEN, "tmf\0*.tmf", "./res", "");
+				if (ff == NULL)
+				{
+					printf("Loading from no place\n");
+				}
+				else
+				{
+					printf("Loading: %s\n", ff);
+					load(std::string(ff));
+				}
+			}
+			if (ImGui::MenuItem("Save", "CTRL+S"))
+			{
+				if (prevSave == "")
+				{
+					const char* ff = noc_file_dialog_open(NOC_FILE_DIALOG_SAVE, "tmf\0*.tmf", "./res", "");
+					if (ff == NULL)
+					{
+						printf("Saving to no place\n");
+					}
+					else
+					{
+						prevSave = std::string(ff);
+						printf("File: %s\n", prevSave.c_str());
+						printf("Saving to: %s\n", ff);
+						save(std::string(ff));
+					}
+				}
+				else
+				{
+					save(prevSave);
+				}
+			}
+			if (ImGui::MenuItem("Save As..", "SHIFT+S"))
+			{
+				const char* ff = noc_file_dialog_open(NOC_FILE_DIALOG_SAVE, "tmf\0*.tmf", "./res", "");
+				if (ff == NULL)
+				{
+					printf("Saving to no place\n");
+				}
+				else
+				{
+					prevSave = std::string(ff);
+					printf("File: %s\n", prevSave.c_str());
+					printf("Saving to: %s\n", ff);
+					save(std::string(ff));
+				}
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Edit"))
+		{
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("View"))
+		{
+			ImGui::EndMenu();
+		}
+	}
+	ImGui::EndMainMenuBar();
+
+}
+
+void Editor::update(float dt)
+{
+	doInput(dt);
+
+	uiMenuBar();
+
+	float scale = 2.0f;
 	int maxX = 3;
 
 	ImGui::Begin("Tiles");
 
-	if (ImGui::Button("Eraser", ImVec2(-1, 0)))
+	bool eraserSel = selected == NULL;
+
+	if (eraserSel)
 	{
-		selected = "";
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8, 0.8, 0.8, 0.5));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1, 1, 1, 0.5));
+	}
+
+	if (eraseTop)
+	{
+		if (ImGui::Button("Erase Top", ImVec2(-1, 0)))
+		{
+			if (eraserSel)
+			{
+				eraseTop = false;
+			}
+			selected = NULL;
+		}
+	}
+	else
+	{
+		if (ImGui::Button("Erase Bottom", ImVec2(-1, 0)))
+		{
+			if (eraserSel)
+			{
+				eraseTop = true;
+			}
+			selected = NULL;
+		}
+	}
+
+	if (eraserSel)
+	{
+		ImGui::PopStyleColor(2);
+	}
+
+	if (!showTop)
+	{
+		if (ImGui::Button("Bottom", ImVec2(-1, 0)))
+		{
+			showTop = true;
+		}
+	}
+	else
+	{
+		if (ImGui::Button("Top", ImVec2(-1, 0)))
+		{
+			showTop = false;
+		}
 	}
 
 	ImGui::BeginChild("TileList", ImVec2(0, 0), true);
@@ -65,41 +257,33 @@ void Editor::update(float dt)
 
 	for (std::unordered_map<std::string, TileInfo>::iterator it = assets->tiles.begin(); it != assets->tiles.end(); ++it)
 	{
-		bool styled = selected == it->first;
+		bool styled = selected == &it->second;
 
 		if (styled)
 		{
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8, 0.8, 0.8, 0.5));
 			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1, 1, 1, 0.5));
 		}
-
-		if (ImGui::ImageButton(*it->second.top, sf::Vector2f(scale * TILE_SIZE, scale * TILE_SIZE)))
+		if (it->second.top == showTop)
 		{
-			selected = it->first;
+			if (uiTileButton(&it->second, scale))
+			{
+				selected = &it->second;
+			}
+			if (xoff >= maxX - 1)
+			{
+				xoff = 0;
+			}
+			else
+			{
+				ImGui::SameLine();
+				xoff++;
+			}
 		}
 
 		if (styled)
 		{
 			ImGui::PopStyleColor(2);
-		}
-
-		if (ImGui::IsItemHovered())
-		{
-			ImGui::BeginTooltip();
-			ImGui::Text("%s ('%s')    ", it->second.name.c_str(), it->first.c_str());
-			ImGui::Separator();
-			ImGui::TextWrapped("%s", it->second.desc.c_str());
-			ImGui::EndTooltip();
-		}
-
-		if (xoff >= maxX - 1)
-		{
-			xoff = 0;
-		}
-		else
-		{
-			ImGui::SameLine();
-			xoff++;
 		}
 	}
 
@@ -112,13 +296,20 @@ void Editor::update(float dt)
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			if (selected == "DELETER" || selected == "")
+			if (selected == NULL)
 			{
 				if (tX >= 0 && tY >= 0 && tX < map->width && tY < map->height)
 				{
 					int i = tY * map->width + tX;
 
-					map->tiles[i].id = "";
+					if (eraseTop)
+					{
+						map->tiles[i].top = NULL;
+					}
+					else
+					{
+						map->tiles[i].bot = NULL;
+					}
 				}
 			}
 			else
@@ -127,7 +318,14 @@ void Editor::update(float dt)
 				{
 					int i = tY * map->width + tX;
 
-					map->tiles[i].id = selected;
+					if (selected->top)
+					{
+						map->tiles[i].top = selected;
+					}
+					else
+					{
+						map->tiles[i].bot = selected;
+					}
 				}
 			}
 		}

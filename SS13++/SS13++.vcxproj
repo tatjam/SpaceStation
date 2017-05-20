@@ -174,6 +174,7 @@
     <ClInclude Include="src\dep\imgui\stb_rect_pack.h" />
     <ClInclude Include="src\dep\imgui\stb_textedit.h" />
     <ClInclude Include="src\dep\imgui\stb_truetype.h" />
+    <ClInclude Include="src\dep\noc_file_dialog.h" />
     <ClInclude Include="src\editor\Editor.h" />
     <ClInclude Include="src\shared\ECS\DynamicEntity.h" />
     <ClInclude Include="src\shared\Entity.h" />

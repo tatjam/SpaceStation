@@ -15,20 +15,20 @@
 // Tiles are very basic blocks.
 // They have no interaction and just build up a physical
 // station. They have a top and bottom layer
-
-
+// This tile is as stored in memory, not in map files!
+// It uses a TileInfo pointer instead of a string
+// as a map lookup is extremely expensive to do on real time
 struct Tile
 {
-	std::string id = "";
-
+	TileInfo* top, *bot;
 	// Top health is what blocks the 
 	// player from moving through
 	// Leaks only if next to empty tiles
-	float topHealth = 0.0f;
+	float topHealth = 100.0f;
 
 	// Bot health is the "ground" of the 
 	// tile, if it breaks there is a leak
-	float botHealth = 0.0f;
+	float botHealth = 100.0f;
 
 	sf::Color light = sf::Color::White;
 	
@@ -70,6 +70,9 @@ public:
 	void create(int xsize, int ysize);
 
 	void resize(int nsizex, int nsizey);
+
+	void deserialize(std::string in);
+	std::string serialize();
 
 	// We must check for any MDATA commands
 	void updateServer();

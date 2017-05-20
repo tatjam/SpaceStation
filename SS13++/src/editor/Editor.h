@@ -7,6 +7,8 @@
 #include "../dep/imgui/imgui.h"
 #include "../dep/imgui/imgui-SFML.h"
 
+#include "../dep/noc_file_dialog.h"
+
 #define ZOOM_FACTOR 1.0f
 #define ZOOM_SHIFT 1.5f
 
@@ -20,6 +22,8 @@ class Editor
 {
 public:
 
+	std::string prevSave = "";
+
 	sf::Vector2f sizebase = sf::Vector2f(512, 512);
 
 	sf::Vector2f focus = sf::Vector2f(0, 0);
@@ -31,14 +35,30 @@ public:
 	Tilemap* map;
 	int tX, tY;
 
-	std::string selected = "";
+	TileInfo* selected = NULL;
+
+	bool eraseTop = false;
+
+	bool showTop = false;
 
 
 	sf::RectangleShape cursor;
 
+	std::string getFile(std::string path);
+	
 	float zoom = 1.0f;
 
 	void resize(sf::Vector2f newSize);
+
+	bool uiTileButton(TileInfo* t, float scale);
+
+	void load(std::string path);
+
+	void save(std::string path);
+
+	void doInput(float dt);
+
+	void uiMenuBar();
 
 	void update(float dt);
 

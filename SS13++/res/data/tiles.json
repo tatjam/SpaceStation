@@ -4,8 +4,8 @@
   "base_dirt": "dirt.png",
 
   "floor": {
-    "top": "test.png",
-    "bot": "test2.png",
+    "top": false,
+    "tex": "test.png",
     "walkable": true,
     "tophealth": 100.0,
     "bothealth": 100.0,
@@ -15,8 +15,8 @@
   },
 
   "tubes": {
-    "top": "test2.png",
-    "bot": "test.png",
+    "top": true,
+    "tex": "test2.png",
     "walkable": true,
     "tophealth": 100.0,
     "bothealth": 100.0,
@@ -24,6 +24,5 @@
     "description": "A floor made of multiple metal tubes",
     "name": "Mesh Floor"
   }
-
 
 }

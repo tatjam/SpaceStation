@@ -10,14 +10,16 @@
 
 struct TileInfo
 {
-	sf::Texture* top;
-	sf::Texture* bot;
+	bool top = false;
+
+	sf::Texture* tex;
 
 	sf::Texture* dirt;
 
 	sf::Texture* damage;
 
 	std::string name;
+	std::string cname;
 	std::string desc;
 
 	bool transparent;

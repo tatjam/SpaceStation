@@ -25,8 +25,7 @@ void AssetManager::loadTiles(std::string path, bool ignoreRoot)
 
 				// Load a tile
 				TileInfo in;
-				in.top = getTex(sub["top"]);
-				in.bot = getTex(sub["bot"]);
+				in.tex = getTex(sub["tex"]);
 				if (sub["dirt"].is_null())
 				{
 					in.dirt = getTex(baseDirt);
@@ -46,12 +45,15 @@ void AssetManager::loadTiles(std::string path, bool ignoreRoot)
 
 				in.walkable = (bool)sub["walkable"];
 				in.transparent = (bool)sub["transparent"];
+				in.top = (bool)sub["top"];
 
 				in.topHealth = sub["tophealth"];
 				in.botHealth = sub["bothealth"];
 
 				in.desc = sub["description"].get<std::string>();
 				in.name = sub["name"].get<std::string>();
+
+				in.cname = it.key();
 
 				tiles[it.key()] = in;
 
