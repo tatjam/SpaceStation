@@ -19,81 +19,64 @@ int main()
 
 	assetManager.loadTiles("res/data/tiles.json");
 
-	Tilemap tilemap = Tilemap(10, 10, &assetManager);
-	tilemap.get(5, 5)->id = "floor";
-	tilemap.get(6, 5)->id = "floor";
-	tilemap.get(5, 6)->id = "floor";
-	tilemap.get(6, 6)->id = "floor";
-	tilemap.get(5, 7)->id = "tubes";
-	tilemap.get(6, 7)->id = "tubes";
-	tilemap.get(5, 8)->id = "tubes";
-	tilemap.get(6, 8)->id = "tubes";
+	Tilemap tilemap = Tilemap(30, 30, &assetManager);
 
-	Server server = Server();
-	Client client = Client();
+	tilemap.tiles[0].id = "floor";
 
-	NetSender serverNet;
-	serverNet.ip = sf::IpAddress::getLocalAddress();
-	serverNet.port = server.socket->socket->getLocalPort();
+	sf::RenderWindow* win = new sf::RenderWindow(sf::VideoMode(768, 768), "Editor Window");
 
-	sf::Clock dtc = sf::Clock();
+	ImGui::SFML::Init(*win);
+
+	Editor editor = Editor(&tilemap, &assetManager);
+
+	sf::Event ev;
+
+	sf::Clock dtc;
+	sf::Time dtt;
 	float dt = 0.0f;
 
-	float timer = 0.0f;
+	editor.sizebase = (sf::Vector2f)win->getSize();
+	editor.resize(editor.sizebase);
 
-	float t = 0.0f;
-
-	sf::Vector2f off = sf::Vector2f(0.0f, -128.0f);
-
-	sf::Time dtt;
-
-	ImGui::SFML::Init(*client.win);
-
-	Editor editor = Editor(&tilemap);
-
-	
-	while (client.win->isOpen())
+	while (win->isOpen())
 	{
-		off.x = sin(t) * 90.0f;
-
-		if (client.connected == false)
+		while (win->pollEvent(ev))
 		{
-			client.connect(serverNet);
+			ImGui::SFML::ProcessEvent(ev);
+
+			if (ev.type == sf::Event::Closed)
+			{
+				win->close();
+			}
+			else if (ev.type == sf::Event::Resized)
+			{
+				editor.sizebase = sf::Vector2f(ev.size.width, ev.size.height);
+				editor.resize(sf::Vector2f(ev.size.width, ev.size.height));
+			}
 		}
 
+		ImGui::SFML::Update(*win, dtt);
 
+		editor.update(dt);
 
+		win->clear();
 
+		editor.render(win);
 
-
-		server.update(dt);
-		client.update(dt);
-
-
-		client.win->clear();
-		tilemap.render(client.win, off, sf::Vector2f(2, 2));
-		client.win->pushGLStates();
+		win->pushGLStates();
 		ImGui::Render();
-		client.win->popGLStates();
-		client.display();
+		win->popGLStates();
+
+		win->display();
 
 		dtt = dtc.restart();
 		dt = dtt.asSeconds();
 
-		timer += dt;
-
-		if (timer > 0.5f)
-		{
-			client.win->setTitle("FPS: " + std::to_string(1.0f / dt));
-			timer = 0.0f;
-		}
-
-		t += dt;
-
-		//rintf("FPS: %f\n", 1 / dt);
-
 	}
-	
+
+
+
+
 	ImGui::SFML::Shutdown();
 
 	return 0;

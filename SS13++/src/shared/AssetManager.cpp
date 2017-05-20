@@ -50,6 +50,9 @@ void AssetManager::loadTiles(std::string path, bool ignoreRoot)
 				in.topHealth = sub["tophealth"];
 				in.botHealth = sub["bothealth"];
 
+				in.desc = sub["description"].get<std::string>();
+				in.name = sub["name"].get<std::string>();
+
 				tiles[it.key()] = in;
 
 			}

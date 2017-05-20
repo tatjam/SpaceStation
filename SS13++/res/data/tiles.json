@@ -9,7 +9,9 @@
     "walkable": true,
     "tophealth": 100.0,
     "bothealth": 100.0,
-    "transparent": false
+    "transparent": false,
+    "description": "A basic floor tile",
+    "name": "Tiled Floor"
   },
 
   "tubes": {
@@ -18,7 +20,9 @@
     "walkable": true,
     "tophealth": 100.0,
     "bothealth": 100.0,
-    "transparent": true
+    "transparent": true,
+    "description": "A floor made of multiple metal tubes",
+    "name": "Mesh Floor"
   }
 
 

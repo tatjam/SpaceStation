@@ -17,6 +17,8 @@ struct TileInfo
 
 	sf::Texture* damage;
 
+	std::string name;
+	std::string desc;
 
 	bool transparent;
 	bool walkable;
