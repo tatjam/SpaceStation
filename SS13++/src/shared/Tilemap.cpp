@@ -1,7 +1,5 @@
 #include "Tilemap.h"
 
-
-
 Tile* Tilemap::get(int x, int y)
 {
 	if (x > 0 && y > 0 && x < width && y < width)
@@ -48,6 +46,206 @@ void Tilemap::render(sf::RenderWindow* win,
 			}
 			
 			
+		}
+	}
+}
+
+// This can be optimized and made better! Please look into it future you
+bool Tilemap::canSee(int x1, int y1, int x2, int y2, int maxDist)
+{
+	if (maxDist <= 0)
+	{
+		maxDist = 99999999;
+	}
+
+	float dist = std::sqrt(std::powf((float)(x1 - x2), 2.0f) + std::powf((float)(y1 - y2), 2.0f));
+
+	if (dist > maxDist)
+	{
+		return false;
+	}
+	
+	// Sanitize data for our algorithm
+	// P(x1, y1) must be < P(x2, y2)
+	if (x1 > x2)
+	{
+		std::swap(x1, x2);
+		std::swap(y1, y2);
+	}
+
+	// Same point
+	if (x1 == x2 && y1 == y2)
+	{
+		return true;
+	}
+
+	// Special case for vertical line
+	if (x2 == x1)
+	{
+		if (y1 > y2)
+		{
+			std::swap(y1, y2);
+			std::swap(x1, x2);
+		}
+
+		for (int y = y1; y <= y2; y++)
+		{
+			int i = y * width + x1;
+
+			if (tiles[i].top != NULL)
+			{
+				if (tiles[i].top->transparent == false)
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	// Get equation for line
+	// (y=mx+b)
+	float m, b;
+	// m = (y2-y1)/(x2-x1)
+	m = (float)(y1 - y2) / (float)(x1 - x2);
+	// b = -mx1 + y1
+	b = -m * (float)x1 + (float)y1;
+
+	/*float x = x1 + 0.5f;
+	float y = y1;*/
+	int rx = x1;
+	int ry = y1;
+	
+	float x = x1 + 0.5f;
+	float y;
+
+	for (x; x <= x2; x += 0.25f)
+	{
+		float y = m * x + b;
+		y += 0.1f;
+		rx = (int)std::roundf(x);
+		ry = (int)std::roundf(y);
+		if (rx >= 0 && rx < width && ry >= 0 && ry < height)
+		{
+			int i = ry * width + rx;
+
+			if (tiles[i].top != NULL)
+			{
+				if (tiles[i].top->transparent == false)
+				{
+					return false;
+				}
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+// Works but is pretty fucked up :P
+void Tilemap::doLight(int x, int y, sf::Color color, int power, float mult)
+{
+	int minX = x - power;
+	int minY = y - power;
+	int maxX = x + power;
+	int maxY = y + power;
+	if (minX < 0) { minX = 0; }
+	if (minY < 0) { minY = 0; }
+	if (maxX > width) { maxX = width; }
+	if (maxY > height) { maxY = height; }
+
+
+	for (int ox = minX; ox < maxX; ox++)
+	{
+		for (int oy = minY; oy < maxY; oy++)
+		{
+			int i = oy * width + ox;
+
+			float dist = std::sqrt(std::powf((float)(ox - x), 2.0f) + std::powf((float)(oy - y), 2.0f));
+			float lPow = (power / dist) - 1.0f;
+
+			if(!canSee(ox, oy, x, y, power * 2))
+			{ 
+				lPow = 0.0f;
+			}
+
+
+			float mR = color.r * lPow * mult; float mG = color.g * lPow * mult; float mB = color.b * lPow * mult;
+			float fR = mR + tiles[i].light.r; float fG = mG + tiles[i].light.g; float fB = mB + tiles[i].light.b;
+			if (fR > 255.0f) { fR = 255.0f; }
+			if (fG > 255.0f) { fG = 255.0f; }
+			if (fB > 255.0f) { fB = 255.0f; }
+			if (fR < 0.f) { fR = 0.0f; }
+			if (fG < 0.f) { fG = 0.0f; }
+			if (fB < 0.f) { fB = 0.0f; }
+
+			sf::Color finalColor = sf::Color(fR, fG, fB);
+
+			tiles[i].light = finalColor;
+
+		}
+	}
+
+	// Perform wall visibility checks
+	for (int ox = minX; ox < maxX; ox++)
+	{
+		for (int oy = minY; oy < maxY; oy++)
+		{
+			int i = oy * width + ox;
+			if (tiles[i].top != NULL)
+			{
+				if (tiles[i].top->transparent == false)
+				{
+					// Light bleed
+					for (int oox = -1; oox <= 1; oox++)
+					{
+						for (int ooy = -1; ooy <= 1; ooy++)
+						{
+							if (ox + oox >= 0 && ox + oox < width && oy + ooy >= 0 && oy + ooy < height)
+							{
+								
+								int ii = (oy + ooy) * width + (ox + oox);
+								if (tiles[ii].top != NULL)
+								{
+									if (tiles[ii].top->transparent == true)
+									{
+										if (tiles[ii].light != sf::Color::Black)
+										{
+											tiles[i].light = tiles[ii].light;
+										}
+									}
+
+								}
+								else
+								{
+									if (tiles[ii].light != sf::Color::Black)
+									{
+										tiles[i].light = tiles[ii].light;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	// Wohoo nested blocks!
+}
+
+void Tilemap::clearLight(int minX, int minY, int maxX, int maxY, sf::Color color)
+{
+	for (int ox = minX; ox < maxX; ox++)
+	{
+		for (int oy = minY; oy < maxY; oy++)
+		{
+			int i = oy * width + ox;
+			tiles[i].light = color;
 		}
 	}
 }

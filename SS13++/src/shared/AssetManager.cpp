@@ -46,9 +46,9 @@ void AssetManager::loadTiles(std::string path, bool ignoreRoot)
 				in.walkable = (bool)sub["walkable"];
 				in.transparent = (bool)sub["transparent"];
 				in.top = (bool)sub["top"];
+				in.blockAir = (bool)sub["blockair"];
 
-				in.topHealth = sub["tophealth"];
-				in.botHealth = sub["bothealth"];
+				in.health = sub["health"];
 
 				in.desc = sub["description"].get<std::string>();
 				in.name = sub["name"].get<std::string>();

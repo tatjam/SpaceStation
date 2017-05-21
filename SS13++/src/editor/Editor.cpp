@@ -191,6 +191,18 @@ void Editor::uiMenuBar()
 
 void Editor::update(float dt)
 {
+
+	
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+	{
+		map->clearLight(0, 0, map->width, map->height);
+		map->doLight(tX, tY, sf::Color::White, 6, 1.0f);
+	}
+	else
+	{
+		map->clearLight(0, 0, map->width, map->height, sf::Color::White);
+	}
+
 	doInput(dt);
 
 	uiMenuBar();
@@ -341,8 +353,20 @@ void Editor::update(float dt)
 
 void Editor::render(sf::RenderWindow* win)
 {
+
+	// Size rectangles
+
+	sf::RectangleShape r = sf::RectangleShape(sf::Vector2f(map->width * TILE_SIZE, map->height * TILE_SIZE));
+	r.setFillColor(sf::Color::Black);
+	r.setOutlineThickness(4.0f);
+	r.setOutlineColor(sf::Color(128, 128, 128, 128));
+
 	resize((sf::Vector2f)win->getSize());
 	win->setView(view);
+
+	r.setPosition(-focus);
+
+	win->draw(r);
 
 	//sizebase = (sf::Vector2f)win->getSize();
 

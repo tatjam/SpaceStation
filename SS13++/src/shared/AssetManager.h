@@ -22,11 +22,12 @@ struct TileInfo
 	std::string cname;
 	std::string desc;
 
+
 	bool transparent;
+	bool blockAir;
 	bool walkable;
 
-	float topHealth;
-	float botHealth;
+	float health;
 };
 
 // All operations are done under "root" directory!

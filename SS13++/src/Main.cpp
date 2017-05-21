@@ -31,7 +31,7 @@ int main()
 	ImGui::SFML::Init(*win);
 
 	Editor editor = Editor(&tilemap, &assetManager);
-
+	editor.load("./res/square.tmf");
 	sf::Event ev;
 
 	sf::Clock dtc;
@@ -40,6 +40,8 @@ int main()
 
 	editor.sizebase = (sf::Vector2f)win->getSize();
 	editor.resize(editor.sizebase);
+
+	float t = 0.0f;
 
 	while (win->isOpen())
 	{
@@ -77,7 +79,13 @@ int main()
 		dtt = dtc.restart();
 		dt = dtt.asSeconds();
 
-		win->setTitle("FPS: " + std::to_string(1.0f / dt));
+		t += dt;
+
+		if (t >= 0.5f)
+		{
+			win->setTitle("FPS: " + std::to_string(1.0f / dt));
+			t = 0.0f;
+		}
 
 	}
 

@@ -10,6 +10,8 @@
 #define TILE_SIZE 32
 
 
+
+
 //          TILES
 // 
 // Tiles are very basic blocks.
@@ -66,6 +68,14 @@ public:
 	void render(sf::RenderWindow* win, 
 		sf::Vector2f offset = sf::Vector2f(0, 0), 
 		sf::Vector2f scale = sf::Vector2f(1, 1));
+
+	bool canSee(int x1, int y1, int x2, int y2, int maxDist = -1);
+
+	// Power is basically the radius of the light
+	void doLight(int x, int y, sf::Color color, int power, float mult = 1.0f);
+
+	// Fills all tiles in area black light
+	void clearLight(int minX, int minY, int maxX, int maxY, sf::Color color = sf::Color::Black);
 
 	void create(int xsize, int ysize);
 

@@ -7,8 +7,8 @@
     "top": false,
     "tex": "test.png",
     "walkable": true,
-    "tophealth": 100.0,
-    "bothealth": 100.0,
+    "blockair": false,
+    "health": 100.0,
     "transparent": false,
     "description": "A basic floor tile",
     "name": "Tiled Floor"
@@ -17,12 +17,23 @@
   "tubes": {
     "top": true,
     "tex": "test2.png",
-    "walkable": true,
-    "tophealth": 100.0,
-    "bothealth": 100.0,
+    "walkable": false,
+    "blockair": false,
+    "health": 100.0,
     "transparent": true,
     "description": "A floor made of multiple metal tubes",
     "name": "Mesh Floor"
+  },
+
+  "wall": {
+    "top": true,
+    "tex": "wall.png",
+    "walkable": false,
+    "blockair": true,
+    "health": 100.0,
+    "transparent": false,
+    "description": "A basic wall",
+    "name": "Station Wall"
   }
 
 }
