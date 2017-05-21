@@ -206,9 +206,20 @@ void Tilemap::doLight(int x, int y, sf::Color color, int power, float mult)
 					{
 						for (int ooy = -1; ooy <= 1; ooy++)
 						{
+							// Ignore * 
+							// (*#*) (-1,-1)(1,-1)
+							// (###) 
+							// (*#*) (-1, 1)(1, 1)
+							// Comment to make lighting non-symmetrical 
+							// (or after fixing the visibility checking)
+							if ((oox == -1 && ooy == -1) || (oox == 1 && ooy == -1) ||
+								(oox == -1 && ooy == 1) || (oox == 1 && ooy == 1))
+							{
+								continue;
+							}
+							
 							if (ox + oox >= 0 && ox + oox < width && oy + ooy >= 0 && oy + ooy < height)
 							{
-								
 								int ii = (oy + ooy) * width + (ox + oox);
 								if (tiles[ii].top != NULL)
 								{
