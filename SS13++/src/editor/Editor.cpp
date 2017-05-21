@@ -195,8 +195,12 @@ void Editor::update(float dt)
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
 	{
+		
 		map->clearLight(0, 0, map->width, map->height);
-		map->doLight(tX, tY, sf::Color::Red, 6, 1.0f);
+		if (tX >= 0 && tX < map->width && tY >= 0 && tY < map->height)
+		{
+			map->doLight(tX, tY, sf::Color::Red, 6, 1.0f);
+		}
 	}
 	else
 	{

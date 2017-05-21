@@ -120,15 +120,43 @@ bool Tilemap::canSee(int x1, int y1, int x2, int y2, int maxDist)
 	float x = x1 + 0.5f;
 	float y;
 
-	for (x; x <= x2; x += 0.25f)
+
+	float xstep = 1 / std::abs(m);
+	if (xstep > 0.8f)
+	{
+		xstep = 0.8f;
+	}
+
+	for (x; x <= x2; x += xstep)
 	{
 		float y = m * x + b;
-		y += 0.1f;
+		//y += 0.1f;
 		rx = (int)std::roundf(x);
 		ry = (int)std::roundf(y);
 		if (rx >= 0 && rx < width && ry >= 0 && ry < height)
 		{
 			int i = ry * width + rx;
+
+			float ay = y - m / 4;
+
+			int rry = (int)std::roundf(ay);
+
+			int i2 = rry * width + rx;
+
+			if(rry >= 0 && rry < width)
+			{ 
+
+				if (tiles[i2].top != NULL)
+				{
+					if (tiles[i2].top->transparent == false)
+					{
+						return false;
+					}
+				}
+			}
+
+	
+
 
 			if (tiles[i].top != NULL)
 			{
