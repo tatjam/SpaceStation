@@ -9,6 +9,8 @@
 
 #include "../dep/noc_file_dialog.h"
 
+#include "../util/FileUtil.h"
+
 #define ZOOM_FACTOR 1.0f
 #define ZOOM_SHIFT 1.5f
 
@@ -21,6 +23,8 @@
 class Editor
 {
 public:
+
+	std::string exePath = "";
 
 	std::string prevSave = "";
 

@@ -317,10 +317,14 @@
     <ClInclude Include="src\dep\noc_file_dialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\util\FileUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\test.nut" />
     <None Include="res\data\tiles.json" />
+    <None Include="res\square.tmf" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\test2.png">
@@ -330,6 +334,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\scaffold\hor.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\wall.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

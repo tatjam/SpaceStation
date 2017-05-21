@@ -226,6 +226,7 @@
     <ClInclude Include="src\dep\squirrel\squirrel\squserdata.h" />
     <ClInclude Include="src\dep\squirrel\squirrel\squtils.h" />
     <ClInclude Include="src\dep\squirrel\squirrel\sqvm.h" />
+    <ClInclude Include="src\util\FileUtil.h" />
     <ClInclude Include="src\util\RSocket.h" />
     <ClInclude Include="src\server\Server.h" />
     <ClInclude Include="src\client\Client.h" />
@@ -236,12 +237,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\data\tiles.json" />
+    <None Include="res\square.tmf" />
     <None Include="res\test.nut" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\scaffold\hor.png" />
     <Image Include="res\test.png" />
     <Image Include="res\test2.png" />
+    <Image Include="res\wall.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -125,7 +125,7 @@ void Editor::uiMenuBar()
 			ImGui::MenuItem("New");
 			if (ImGui::MenuItem("Open", "CTRL+O"))
 			{
-				const char* ff = noc_file_dialog_open(NOC_FILE_DIALOG_OPEN, "tmf\0*.tmf", "./res", "");
+				const char* ff = noc_file_dialog_open(NOC_FILE_DIALOG_OPEN, "tmf\0*.tmf", exePath.c_str(), "");
 				if (ff == NULL)
 				{
 					printf("Loading from no place\n");
@@ -140,7 +140,8 @@ void Editor::uiMenuBar()
 			{
 				if (prevSave == "")
 				{
-					const char* ff = noc_file_dialog_open(NOC_FILE_DIALOG_SAVE, "tmf\0*.tmf", "./res", "");
+					printf("Exe path %s\n", exePath.c_str());
+					const char* ff = noc_file_dialog_open(NOC_FILE_DIALOG_SAVE, "tmf\0*.tmf", exePath.c_str(), "");
 					if (ff == NULL)
 					{
 						printf("Saving to no place\n");
@@ -160,7 +161,7 @@ void Editor::uiMenuBar()
 			}
 			if (ImGui::MenuItem("Save As..", "SHIFT+S"))
 			{
-				const char* ff = noc_file_dialog_open(NOC_FILE_DIALOG_SAVE, "tmf\0*.tmf", "./res", "");
+				const char* ff = noc_file_dialog_open(NOC_FILE_DIALOG_SAVE, "tmf\0*.tmf", exePath.c_str(), "");
 				if (ff == NULL)
 				{
 					printf("Saving to no place\n");
@@ -404,6 +405,12 @@ Editor::Editor(Tilemap* t, AssetManager* assets)
 {
 	this->map = t;
 	this->assets = assets;
+
+	// TODO fuck windows
+
+	this->exePath = futil_runPath;
+	this->exePath += "\\res";
+	printf("Resource path: %s\n", exePath.c_str());
 }
 
 

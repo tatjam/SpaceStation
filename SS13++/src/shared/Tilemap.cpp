@@ -121,6 +121,8 @@ bool Tilemap::canSee(int x1, int y1, int x2, int y2, int maxDist)
 	float y;
 
 
+	// Xstep to stop light leaking in vertical/horizontal 
+	// walls due to triangles :P
 	float xstep = 1 / std::abs(m);
 	if (xstep > 0.8f)
 	{

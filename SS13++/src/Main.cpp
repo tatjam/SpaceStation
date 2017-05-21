@@ -11,8 +11,17 @@
 
 #include "editor/Editor.h"
 
+
+// THIS SHOULD BE DONE IN THE FINAL GAME!
+std::string futil_exePath = "";
+std::string futil_runPath = "";
+
 int main()
 {
+	// THIS SHOULD BE DONE IN THE FINAL GAME!
+
+	futil_exePath = FileUtil::stripFilename(FileUtil::getExecutablePath(false));
+	futil_runPath = FileUtil::getExecutablePath(true);
 
 	AssetManager assetManager = AssetManager("res/");
 	assetManager.getTex("test.png");
@@ -43,8 +52,18 @@ int main()
 
 	float t = 0.0f;
 
+	float avgdt = 0.0f;
+
+	std::vector<float> prev;
+	prev.push_back(0);
+
+
+
 	while (win->isOpen())
 	{
+		// This for some reason has to be here
+		// (called every frame), god knows why
+		win->setVerticalSyncEnabled(false);
 		while (win->pollEvent(ev))
 		{
 			ImGui::SFML::ProcessEvent(ev);
@@ -78,10 +97,14 @@ int main()
 
 		dtt = dtc.restart();
 		dt = dtt.asSeconds();
-
+		/*if (prev.size() > 300)
+		{
+			prev.clear();
+			prev.push_back(0);
+		}*/
 		t += dt;
 
-		if (t >= 0.5f)
+		if (t >= 0.1f)
 		{
 			win->setTitle("FPS: " + std::to_string(1.0f / dt));
 			t = 0.0f;
